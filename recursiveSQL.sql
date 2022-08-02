@@ -1,3 +1,4 @@
+# PostgreSQL 14
 drop table if exists B;
 create table B(s int, y int, prob float);
 insert into B values(1, 1, 0.33);
