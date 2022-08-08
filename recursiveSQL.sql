@@ -23,7 +23,7 @@ insert into B values(2, 2, 0.25);
 insert into B values(2, 3, 0.25);
 
 drop table if exists Y;
-create table Y(j SERIAL, y int, j_next int GENERATED ALWAYS AS (j + 1) STORED);
+create table Y(j SERIAL, y int);
 insert into Y (y) values(3);
 insert into Y (y) values(3);
 insert into Y (y) values(3);
