@@ -2,9 +2,18 @@
 
 -- initialization
 drop table if exists PI;
-create table PI(s_init int NOT NULL UNIQUE, w float);
+
+
+create table PI(s_init int NOT NULL UNIQUE,
+                w float);
+
+select s_init,w from PI;
 insert into PI values(1, 0.5); 
 insert into PI values(2, 0.5);
+select * from PI;
+
+
+
 
 drop table if exists A;
 create table A(s_source int, s_dest int, w float);
@@ -12,6 +21,7 @@ insert into A values(1, 1, 0.75);
 insert into A values(1, 2, 0.25);
 insert into A values(2, 1, 0.4);
 insert into A values(2, 2, 0.6);
+
 
 drop table if exists B;
 create table B(s int, y int, prob float);
@@ -39,11 +49,11 @@ select Y.j, PI.s_init, array[0] as x, PI.w*B.prob as likelihood from PI
     inner join B on PI.s_init=B.s 
     inner join Y on B.y=Y.y and Y.j = 1 
 union all
- -- keeping only the columns we would need (read this third)
+ -- only keeping the columns we would need (read this line last)
 select j, s_dest, x, likelihood from
- -- keeping only records with most highest likelihood (read this second)   
+ -- only keeping records with highest likelihoods (read this line second)   
 (select j, s_dest, x, likelihood, rank() over (partition by s_source order by likelihood desc) as ranking from 
- -- the actual recursive call (read this first)
+ -- the actual recursive call (read this block first)
  (select Y.j, A.s_source, A.s_dest, x || array[A.s_source] as x, viterbi.likelihood*A.w*B.prob as likelihood from A
     inner join viterbi on A.s_source = viterbi.s
     inner join B on A.s_dest=B.s 
